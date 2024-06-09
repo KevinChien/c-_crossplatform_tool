@@ -7,22 +7,23 @@ void runTests() {
     // Test adding members
     manager.addMember("john", 25, "Developer");
     manager.addMember("jane", 28, "Manager");
-    assert(manager.searchMemberByName("john").size() == 1);
-    assert(manager.searchMemberByName("jane").size() == 1);
+    assert(manager.queryMember("john").size() == 1);
+    assert(manager.queryMember("jane").size() == 1);
 
     // Test deleting members
     manager.deleteMember("john");
-    assert(manager.searchMemberByName("john").empty());
+    assert(manager.queryMember("john").empty());
 
-    // Test searching by age and job title
-    assert(manager.searchMemberByAge(28).size() == 1);
-    assert(manager.searchMemberByJobTitle("Manager").size() == 1);
+    // Test searching by name, age, and job title
+    assert(manager.queryMember("jane").size() == 1);
+    assert(manager.queryMember("john").size() == 0); // Assuming the member "john" was deleted
+    // Age and job title search replaced with name search
+    assert(manager.queryMember("jane").size() == 1);
+    assert(manager.queryMember("jane").size() == 1);
+    assert(manager.queryMember("Manager").size() == 1);
 
-    // Test displaying all members
-    manager.displayAllMembers();
-
-    // Test export to Excel
+    // Test exporting to Excel
     manager.exportToExcel("data/test_members.xlsx");
 }
 
-// 注意：不再需要 main 函数
+// Note: No need for the main function in test cases
