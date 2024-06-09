@@ -130,7 +130,7 @@ void processCommand(const std::string& command, MemberManager& manager) {
         std::vector<std::string> tokens{std::istream_iterator<std::string>{iss},
                                          std::istream_iterator<std::string>{}};
         if (tokens.size() == 2) {
-            manager.importFromExcel(tokens[1]);
+            manager.importFromJSON(tokens[1]);
         } else {
             std::cout << "Invalid command. Usage: import <filename>" << std::endl;
         }
@@ -140,7 +140,7 @@ void processCommand(const std::string& command, MemberManager& manager) {
         std::vector<std::string> tokens{std::istream_iterator<std::string>{iss},
                                          std::istream_iterator<std::string>{}};
         if (tokens.size() == 2) {
-            manager.exportToExcel(tokens[1]);
+            manager.exportToJSON(tokens[1]);
         } else {
             std::cout << "Invalid command. Usage: export <filename>" << std::endl;
         }

@@ -5,6 +5,10 @@
 
 #ifndef _WIN32
 #include <xlsxio_read.h>
+#else
+#include <fstream>
+#include <nlohmann/json.hpp>
+using json = nlohmann::json;
 #endif
 
 // 添加成員
@@ -46,92 +50,61 @@ void MemberManager::listAllMembers() const {
     }
 }
 
-void MemberManager::importFromExcel(const std::string& filename) {
-#ifndef _WIN32
-    std::cout << "Importing data from Excel file: " << filename << std::endl;
-
-    // 打开 Excel 文件
-    xlsxioreader xls_file = xlsxioread_open(filename.c_str());
-    if (!xls_file) {
-        std::cerr << "Error: Unable to open Excel file: " << filename << std::endl;
+void MemberManager::importFromJSON(const std::string& filename) {
+    std::ifstream file(filename);
+    if (!file.is_open()) {
+        std::cerr << "Error: Unable to open JSON file: " << filename << std::endl;
         return;
     }
 
-    // 打开 Excel 文件成功
-    std::cout << "Successfully opened Excel file." << std::endl;
-
-    // 打开 Excel 文件中的第一个工作表
-    xlsxioreadersheet sheet = xlsxioread_sheet_open(xls_file, NULL, XLSXIOREAD_SKIP_EMPTY_ROWS);
-    if (!sheet) {
-        std::cerr << "Error: Unable to read worksheet from Excel file." << std::endl;
-        xlsxioread_close(xls_file);
+    json data;
+    try {
+        file >> data;
+    } catch (const std::exception& e) {
+        std::cerr << "Error: Unable to parse JSON data: " << e.what() << std::endl;
         return;
     }
 
-    // 打开工作表成功
-    std::cout << "Successfully opened worksheet." << std::endl;
+    for (const auto& member : data["members"]) {
+        std::string name = member["name"];
+        int age = member["age"];
+        std::string job_title = member["job_title"];
 
-    // 跳过标题行
-    xlsxioread_sheet_next_row(sheet);
-
-    // 读取数据并导入到成员列表中
-    while (xlsxioread_sheet_next_row(sheet)) {
-        const XLSXIOCHAR* name = xlsxioread_sheet_next_cell(sheet);
-        const XLSXIOCHAR* age = xlsxioread_sheet_next_cell(sheet);
-        const XLSXIOCHAR* job_title = xlsxioread_sheet_next_cell(sheet);
-
-        if (!name || !age || !job_title) {
-            // 在 Excel 文件中发现无效的数据格式
-            std::cerr << "Error: Invalid data format in Excel file." << std::endl;
-            break;
-        }
-
-        // 输出每个单元格的内容
+        // Output the data
         std::cout << "Name: " << name << ", Age: " << age << ", Job Title: " << job_title << std::endl;
 
-        // 尝试将年龄从字符串转换为整数
-        try {
-            int age_value = std::stoi(reinterpret_cast<const char*>(age));
-            // 将成员添加到列表中
-            addMember(reinterpret_cast<const char*>(name), age_value, reinterpret_cast<const char*>(job_title));
-        } catch (const std::invalid_argument& e) {
-            std::cerr << "Error: Invalid age format: " << e.what() << std::endl;
-            break;
-        }
+        // Add the member to the list
+        addMember(name, age, job_title);
     }
 
-    // 关闭工作表和 Excel 文件
-    xlsxioread_sheet_close(sheet);
-    xlsxioread_close(xls_file);
-
-    std::cout << "Data imported successfully." << std::endl;
-#else
-    std::cout << "Not support yet." << std::endl;
-#endif
+    std::cout << "Data imported successfully from JSON file: " << filename << std::endl;
 }
 
+void MemberManager::exportToJSON(const std::string& filename) const {
+    json data;
 
-
-
-// 導出成員資料
-void MemberManager::exportToExcel(const std::string& filename) const {
-    lxw_workbook *workbook = workbook_new(filename.c_str());
-    lxw_worksheet *worksheet = workbook_add_worksheet(workbook, NULL);
-
-    worksheet_write_string(worksheet, 0, 0, "Name", NULL);
-    worksheet_write_string(worksheet, 0, 1, "Age", NULL);
-    worksheet_write_string(worksheet, 0, 2, "Job Title", NULL);
-
-    int row = 1;
     for (const auto& member : members) {
-        worksheet_write_string(worksheet, row, 0, member.name.c_str(), NULL);
-        worksheet_write_number(worksheet, row, 1, member.age, NULL);
-        worksheet_write_string(worksheet, row, 2, member.jobTitle.c_str(), NULL);
-        row++;
+        json member_data;
+        member_data["name"] = member.name;
+        member_data["age"] = member.age;
+        member_data["job_title"] = member.jobTitle;
+        data["members"].push_back(member_data);
     }
 
-    workbook_close(workbook);
-    std::cout << "Data exported to Excel file: " << filename << std::endl;
+    std::ofstream file(filename);
+    if (!file.is_open()) {
+        std::cerr << "Error: Unable to create JSON file: " << filename << std::endl;
+        return;
+    }
+
+    try {
+        file << std::setw(4) << data << std::endl;
+    } catch (const std::exception& e) {
+        std::cerr << "Error: Unable to write JSON data: " << e.what() << std::endl;
+        return;
+    }
+
+    std::cout << "Data exported to JSON file: " << filename << std::endl;
 }
 
 // 修改成员的年龄

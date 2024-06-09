@@ -24,11 +24,11 @@ public:
     // 新功能：列出所有成員
     void listAllMembers() const;
 
-        // 新功能：導入成員資料
-    void importFromExcel(const std::string& filename);
+    // 新功能：導入成員資料
+    void importFromJSON(const std::string& filename);
 
     // 新功能：導出成員資料
-    void exportToExcel(const std::string& filename) const;
+    void exportToJSON(const std::string& filename) const;
 
     // 修改成员的年龄
     void modifyMemberAge(const std::string& name, int newAge);

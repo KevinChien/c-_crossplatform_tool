@@ -35,7 +35,7 @@ include_directories(${ZLIB_INCLUDE_DIRS})
 add_executable(MemberManagement_main ${SOURCES})
 
 # 編譯主程序
-target_link_libraries(MemberManagement_main xlsxwriter ${ZLIB_LIBRARIES})
+target_link_libraries(MemberManagement_main PRIVATE xlsxwriter ${ZLIB_LIBRARIES} )
 
 # 編譯測試程序
 add_library(MemberManagement_test ${TEST_SOURCES} ${SOURCES})
@@ -44,7 +44,7 @@ add_library(MemberManagement_test ${TEST_SOURCES} ${SOURCES})
 add_executable(runTests ${TEST_SOURCES})
 
 # 編譯測試程序
-target_link_libraries(runTests MemberManagement_test xlsxwriter ${ZLIB_LIBRARIES})
+target_link_libraries(runTests PRIVATE MemberManagement_test xlsxwriter ${ZLIB_LIBRARIES} )
 
 # 在 Windows 平台下定义宏
 if(WIN32)

@@ -23,7 +23,7 @@ void runTests() {
     assert(manager.queryMember("Manager").size() == 1);
 
     // Test exporting to Excel
-    manager.exportToExcel("data/test_members.xlsx");
+    manager.exportToJSON("data/test_members");
 }
 
 // Note: No need for the main function in test cases
