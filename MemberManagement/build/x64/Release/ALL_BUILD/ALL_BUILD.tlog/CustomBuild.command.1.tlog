@@ -1,0 +1,10 @@
+^E:\C_WORKSPACE\MEMBERMANAGEMENT\CMAKELISTS.TXT
+setlocal
+"C:\Program Files\CMake\bin\cmake.exe" -SE:/c_workspace/MemberManagement -BE:/c_workspace/MemberManagement/build --check-stamp-file E:/c_workspace/MemberManagement/build/CMakeFiles/generate.stamp
+if %errorlevel% neq 0 goto :cmEnd
+:cmEnd
+endlocal & call :cmErrorLevel %errorlevel% & goto :cmDone
+:cmErrorLevel
+exit /b %1
+:cmDone
+if %errorlevel% neq 0 goto :VCEnd

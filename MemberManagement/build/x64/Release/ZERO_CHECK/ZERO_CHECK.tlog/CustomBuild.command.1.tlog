@@ -1,0 +1,10 @@
+^E:\C_WORKSPACE\MEMBERMANAGEMENT\BUILD\CMAKEFILES\B6C0492A28DF1C34578B8DF972B4A775\GENERATE.STAMP.RULE
+setlocal
+"C:\Program Files\CMake\bin\cmake.exe" -SE:/c_workspace/MemberManagement -BE:/c_workspace/MemberManagement/build --check-stamp-list CMakeFiles/generate.stamp.list --vs-solution-file E:/c_workspace/MemberManagement/build/MemberManagement.sln
+if %errorlevel% neq 0 goto :cmEnd
+:cmEnd
+endlocal & call :cmErrorLevel %errorlevel% & goto :cmDone
+:cmErrorLevel
+exit /b %1
+:cmDone
+if %errorlevel% neq 0 goto :VCEnd

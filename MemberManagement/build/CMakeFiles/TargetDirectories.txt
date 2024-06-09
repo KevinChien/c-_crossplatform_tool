@@ -1,0 +1,5 @@
+E:/c_workspace/MemberManagement/build/CMakeFiles/MemberManagement_main.dir
+E:/c_workspace/MemberManagement/build/CMakeFiles/MemberManagement_test.dir
+E:/c_workspace/MemberManagement/build/CMakeFiles/runTests.dir
+E:/c_workspace/MemberManagement/build/CMakeFiles/ALL_BUILD.dir
+E:/c_workspace/MemberManagement/build/CMakeFiles/ZERO_CHECK.dir
