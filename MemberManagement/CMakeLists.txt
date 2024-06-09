@@ -45,3 +45,9 @@ add_executable(runTests ${TEST_SOURCES})
 
 # 編譯測試程序
 target_link_libraries(runTests MemberManagement_test xlsxwriter ${ZLIB_LIBRARIES})
+
+# 在 Windows 平台下定义宏
+if(WIN32)
+    target_compile_definitions(MemberManagement_main PRIVATE _WIN32)
+    target_compile_definitions(runTests PRIVATE _WIN32)
+endif()

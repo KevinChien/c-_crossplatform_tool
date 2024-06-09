@@ -2,7 +2,10 @@
 #include <iostream>
 #include <algorithm>
 #include "xlsxwriter.h"
+
+#ifndef _WIN32
 #include <xlsxio_read.h>
+#endif
 
 // 添加成員
 void MemberManager::addMember(const std::string& name, int age, const std::string& jobTitle) {
@@ -44,6 +47,7 @@ void MemberManager::listAllMembers() const {
 }
 
 void MemberManager::importFromExcel(const std::string& filename) {
+#ifndef _WIN32
     std::cout << "Importing data from Excel file: " << filename << std::endl;
 
     // 打开 Excel 文件
@@ -101,6 +105,9 @@ void MemberManager::importFromExcel(const std::string& filename) {
     xlsxioread_close(xls_file);
 
     std::cout << "Data imported successfully." << std::endl;
+#else
+    std::cout << "Not support yet." << std::endl;
+#endif
 }
 
 
