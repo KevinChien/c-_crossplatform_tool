@@ -20,13 +20,6 @@ void removeMember(MemberManager& manager, const std::string& name) {
     manager.deleteMember(name);
 }
 
-// 查詢成員信息
-void queryMember(MemberManager& manager, const std::string& name) {
-    auto results = manager.queryMember(name);
-    for (const auto& member : results) {
-        std::cout << member.name << ", " << member.age << ", " << member.jobTitle << std::endl;
-    }
-}
 
 // 修改成員信息
 void modifyMember(MemberManager& manager, const std::string& name, const std::string& field, const std::string& newValue) {
@@ -98,19 +91,9 @@ void processCommand(const std::string& command, MemberManager& manager) {
             std::cout << "Invalid command. Usage: remove <name>" << std::endl;
         }
     } else if (command.substr(0, 5) == "query") {
-        // 解析查詢成員
+        // 解析查询成员
         std::string name = command.substr(6);
-        auto result = manager.queryMember(name);
-        if (result.empty()) {
-            std::cout << "Member not found." << std::endl;
-        } else {
-            std::cout << "Query result:" << std::endl;
-            std::cout << "Name  | Age | Job Title" << std::endl;
-            std::cout << "-----------------------" << std::endl;
-            for (const auto& member : result) {
-                std::cout << member.name << " | " << member.age << " | " << member.jobTitle << std::endl;
-            }
-        }
+        manager.queryMember(name);
     } else if (command.substr(0, 6) == "modify") {
         // 解析修改成員命令
         std::istringstream iss(command);

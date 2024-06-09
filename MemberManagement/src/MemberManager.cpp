@@ -2,14 +2,11 @@
 #include <iostream>
 #include <algorithm>
 #include "xlsxwriter.h"
+#include <iomanip> // 添加这个头文件
 
-#ifndef _WIN32
-#include <xlsxio_read.h>
-#else
 #include <fstream>
 #include <nlohmann/json.hpp>
 using json = nlohmann::json;
-#endif
 
 // 添加成員
 void MemberManager::addMember(const std::string& name, int age, const std::string& jobTitle) {
@@ -31,6 +28,32 @@ std::vector<Member> MemberManager::queryMember(const std::string& name) const {
             results.push_back(member);
         }
     }
+
+    // 计算每个字段的最大宽度
+    size_t maxNameWidth = 4; // 默认最小宽度为4，至少能容纳 "Name" 这个单词
+    size_t maxAgeWidth = 3;  // 默认最小宽度为3，至少能容纳 "Age" 这个单词
+    size_t maxTitleWidth = 9; // 默认最小宽度为9，至少能容纳 "Job Title" 这个单词
+
+    for (const auto& member : results) {
+        maxNameWidth = std::max(maxNameWidth, member.name.size());
+        maxAgeWidth = std::max(maxAgeWidth, std::to_string(member.age).size());
+        maxTitleWidth = std::max(maxTitleWidth, member.jobTitle.size());
+    }
+
+    // 打印查询结果的表头
+    std::cout << "Query results for member: " << name << std::endl;
+    std::cout << std::left << std::setw(maxNameWidth + 2) << "Name" << " | "
+              << std::setw(maxAgeWidth + 2) << "Age" << " | "
+              << std::setw(maxTitleWidth + 2) << "Job Title" << std::endl;
+    std::cout << std::string(maxNameWidth + maxAgeWidth + maxTitleWidth + 8, '-') << std::endl;
+
+    // 打印查询结果
+    for (const auto& member : results) {
+        std::cout << std::left << std::setw(maxNameWidth + 2) << member.name << " | "
+                  << std::setw(maxAgeWidth + 2) << member.age << " | "
+                  << std::setw(maxTitleWidth + 2) << member.jobTitle << std::endl;
+    }
+
     return results;
 }
 
@@ -41,12 +64,32 @@ void MemberManager::listAllMembers() const {
         return;
     }
 
-    std::cout << "All members:" << std::endl;
-    std::cout << "Name  | Age | Job Title" << std::endl;
-    std::cout << "-----------------------" << std::endl;
+    // 计算每个字段的最大宽度
+    size_t maxNameWidth = 4; // 默认最小宽度为4，至少能容纳 "Name" 这个单词
+    size_t maxAgeWidth = 3;  // 默认最小宽度为3，至少能容纳 "Age" 这个单词
+    size_t maxTitleWidth = 9; // 默认最小宽度为9，至少能容纳 "Job Title" 这个单词
 
     for (const auto& member : members) {
-        std::cout << member.name << " | " << member.age << " | " << member.jobTitle << std::endl;
+        maxNameWidth = std::max(maxNameWidth, member.name.size());
+        maxAgeWidth = std::max(maxAgeWidth, std::to_string(member.age).size());
+        maxTitleWidth = std::max(maxTitleWidth, member.jobTitle.size());
+    }
+
+    // 打印表头
+    std::cout << "All members:" << std::endl;
+    std::cout << std::left << std::setw(maxNameWidth + 2) << "Name" << " | "
+              << std::setw(maxAgeWidth + 2) << "Age" << " | "
+              << std::setw(maxTitleWidth + 2) << "Job Title" << std::endl;
+
+    // 打印分隔线
+    std::cout << std::setfill('-') << std::setw(maxNameWidth + maxAgeWidth + maxTitleWidth + 8) << "-" << std::endl;
+    std::cout << std::setfill(' ');
+
+    // 打印每个成员的信息
+    for (const auto& member : members) {
+        std::cout << std::left << std::setw(maxNameWidth + 2) << member.name << " | "
+                  << std::setw(maxAgeWidth + 2) << member.age << " | "
+                  << std::setw(maxTitleWidth + 2) << member.jobTitle << std::endl;
     }
 }
 

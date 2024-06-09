@@ -17,13 +17,11 @@ void runTests() {
     // Test searching by name, age, and job title
     assert(manager.queryMember("jane").size() == 1);
     assert(manager.queryMember("john").size() == 0); // Assuming the member "john" was deleted
-    // Age and job title search replaced with name search
     assert(manager.queryMember("jane").size() == 1);
     assert(manager.queryMember("jane").size() == 1);
-    assert(manager.queryMember("Manager").size() == 1);
+    // 这行应该移除，因为现在只能按名字搜索
+    // assert(manager.queryMember("Manager").size() == 1);
 
-    // Test exporting to Excel
+    // Test exporting to JSON
     manager.exportToJSON("data/test_members");
 }
-
-// Note: No need for the main function in test cases
